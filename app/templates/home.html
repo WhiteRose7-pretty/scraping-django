@@ -1,0 +1,127 @@
+{% load static %}
+{% load save_get_paginator %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="System magazynowy">
+  <meta name="author" content="TG Code sp. z o. o.">
+  <title>System magazynowy</title>
+  <!-- Font Awesome 5 -->
+  <link rel="stylesheet" href="{% static 'assets/libs/@fortawesome/fontawesome-free/css/all.min.css' %}"><!-- Purpose CSS -->
+  <link rel="stylesheet" href="{% static 'assets/css/purpose.css' %}" id="stylesheet">
+</head>
+
+<body>
+
+
+  <div class="main-content">
+
+      <div class="container">
+          
+          <!-- Titl section -->
+          <div class="row">
+            <div class="col-12 mt-5 mb-4 text-center">
+              <h1> Wyszukaj swój produkt </h1>
+            </div>
+          </div>
+          
+          <!-- Search section -->
+          <form method="GET">
+            <div class="form-row">
+              <div class="col-md-4">
+                {{ form.index }}
+              </div>
+              <div class="col-md-4">
+                {{ form.name }}
+              </div>
+              <div class="col-md-4">
+                {{ form.ean }}
+              </div>
+            </div>
+            <div class="form-row mt-2">
+              <div class="col-md-2">
+                {{ form.category }}
+              </div>
+              <div class="col-md-2">
+                {{ form.price_st }}
+              </div>
+              <div class="col-md-2">
+                {{ form.price_end }}
+              </div>
+              <div class="col-md-2">
+                {{ form.count_st }}
+              </div>
+              <div class="col-md-2">
+                {{ form.count_end }}
+              </div>
+              <div class="col-md-2">
+                <button class="btn btn-primary btn-block" type="submit">Wyszukaj</button>
+              </div>
+            </div>
+            <a class="text-sm text-dark" href="{% url 'app:home' %}">Wyczyść formularz <i class="fas fa-sync-alt"></i></a>
+          </form>
+          
+          <!-- Products -->
+          <div class="row mb-0">
+            <div class="col-12 mt-5">
+              <h5>Wyniki wyszukiwania ({{ products.count }})</h5>
+              
+              <div class=" infinite-container">
+              {% for product in numbers %}
+              <div class="card mt-2 mb-2 infinite-item">
+                <div class="card-body">
+                  <h5>{{ product.name }} - <b>INDEKS: {{ product.index }}</b></h5>
+                  <span class="badge badge-primary">EAN: {{ product.ean }}</span>
+                  <span class="badge badge-secondary ml-2">KATEGORIA: {{ product.category }}</span>
+                  <span class="badge badge-dark ml-2">CENA: {{ product.price }} PLN</span>
+                  <span class="badge {% if limit.min > product.count %}badge-danger{% else %}badge-success{% endif %} ml-2">STAN MAGAZYNOWY: {{ product.count }}</span>
+                </div>
+              </div>
+              {% endfor %}
+              </div>
+              
+            </div>
+          </div>
+          
+        <!-- Load more -->
+        <!-- Load more -->
+        {% if numbers.has_next %}
+        <div class="mt-4 text-center">
+          <a href="?{% url_replace request 'page' numbers.next_page_number %}" class="btn btn-sm btn-neutral rounded-pill shadow hover-translate-y-n3 infinite-more-link" disabled>
+            <div class="spinner-grow text-" role="status">
+              <span class="sr-only"></span>
+            </div>
+            <div class="spinner-grow text-" role="status">
+              <span class="sr-only"></span>
+            </div>
+            <div class="spinner-grow text-" role="status">
+              <span class="sr-only"></span>
+            </div> 
+          </a>
+        </div>
+        {% endif %}
+        <!-- end pagination -->
+        
+      </div>
+
+  </div>
+  
+  
+  <!-- Core JS - includes jquery, bootstrap, popper, in-view and sticky-kit -->
+  <script src="{% static 'assets/js/purpose.core.js' %}"></script>
+  <script src="{% static 'assets/js/jquery-3.1.1.min.js' %}"></script> <!-- to powoduje dziwne błedu w wielu przypadkach stronicowanie dobrze działą bez tego -->
+  <script src="{% static 'assets/js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'assets/js/infinite.min.js' %}"></script>
+  <!-- Purpose JS -->
+  <script src="{% static 'assets/js/purpose.js' %}"></script>
+  <script>
+  var infinite = new Waypoint.Infinite({
+    element: $('.infinite-container')[0]
+  });
+  </script>
+</body>
+
+</html>
