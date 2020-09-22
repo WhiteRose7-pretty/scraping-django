@@ -1,7 +1,6 @@
 from django.db import models
 
 
-
 class Product(models.Model):
     index = models.CharField(max_length=250)
     name = models.CharField(max_length=500, verbose_name='Nazwa')
@@ -18,10 +17,13 @@ class Product(models.Model):
         return self.name
 
 
-
 class Limit(models.Model):
     max = models.IntegerField()
     min = models.IntegerField()
+    admin_email = models.EmailField(max_length=30, default='')
+    alert_content = models.CharField(max_length=255, default='')
+    alert_subject = models.CharField(max_length=50, default='')
+    domain = models.CharField(max_length=30, default='')
 
     class Meta:
         verbose_name = 'Limity wysyłania wiadomości'
