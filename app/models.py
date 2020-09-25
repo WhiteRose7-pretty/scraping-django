@@ -8,6 +8,7 @@ class Product(models.Model):
     category = models.CharField(max_length=100, verbose_name='Kategoria')
     count = models.IntegerField(verbose_name='Stan magazynowy (stan_mag)') #if max save max scraping
     price = models.DecimalField(max_digits=20, decimal_places=2, verbose_name='Cena zakupu netto')
+    added_by_scrap = models.BooleanField(null=True, default=False)
 
     class Meta:
         verbose_name = 'Produkty'
@@ -24,6 +25,7 @@ class Limit(models.Model):
     alert_content = models.CharField(max_length=255, default='')
     alert_subject = models.CharField(max_length=50, default='')
     domain = models.CharField(max_length=30, default='')
+
 
     class Meta:
         verbose_name = 'Limity wysyłania wiadomości'

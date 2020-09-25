@@ -2,7 +2,8 @@ from django.shortcuts import render
 from .models import Product, Limit
 from .forms import BasicSearchForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from .tasks import check_product, main
+from django.http import HttpResponseRedirect
 
 
 def home(request):
@@ -55,3 +56,23 @@ def home(request):
                'limit': limit,
                'form': form}
     return render(request, 'home.html', context)
+
+
+def send(request):
+    products = Product.objects.all()
+    check_product()
+    return HttpResponseRedirect('/')
+
+
+def delete(request):
+    products = Product.objects.all()
+    for item in products:
+        item.delete()
+    return HttpResponseRedirect('/')
+
+
+def scrap(request):
+    main()
+    return HttpResponseRedirect('/')
+
+

@@ -5,7 +5,10 @@ import requests
 from bs4 import BeautifulSoup
 from .models import Product, Limit
 from django.core.mail import send_mail
-import sys
+from django.template.loader import render_to_string
+import datetime
+import pytz
+
 
 xml_url = 'https://sollux.ideaerp.pl/sollux-xml'
 property_list_file = 'data.txt'
@@ -25,6 +28,7 @@ def get_product(page_url):
     resp = requests.get(page_url)
     output = []
     # print(resp.text)
+    resp.encoding = resp.apparent_encoding
     soup = BeautifulSoup(resp.text, 'xml')
     products = soup.findAll('Produkt')
     i = 0
@@ -59,12 +63,18 @@ def get_product(page_url):
     return output
 
 
-@periodic_task(run_every=(crontab(minute='*/2')))
+@periodic_task(run_every=(crontab(minute='*/60')))
 def main():
-    data = get_product(xml_url)
+    tz = pytz.timezone('Europe/Warsaw')
+    warsaw_now = datetime.datetime.now(tz)
+    print(warsaw_now)
+    if not warsaw_now.hour == 6:
+        return True
 
-    for item in data:
-        print(type(item.name))
+    products = Product.objects.filter(added_by_scrap=True)
+    for item in products:
+        item.delete()
+    data = get_product(xml_url)
 
     with open(property_list_file, "wb+") as fp:
         pickle.dump(data, fp)
@@ -72,7 +82,6 @@ def main():
     with open(property_list_file, "rb+") as fp:
         result = pickle.load(fp)
 
-    print(len(result))
     for item in result:
         obj = Product()
         obj.index = item.index
@@ -81,14 +90,26 @@ def main():
         obj.category = item.category
         obj.count = int(float(item.count))
         obj.price = float(item.price)
+        obj.added_by_scrap = True
         obj.save()
+    check_product()
+    return True
 
+
+def check_product():
     limit = Limit.objects.first()
+    products = Product.objects.filter(added_by_scrap=True, count__lt=limit.min)
     print(limit)
+
     if limit:
-        if len(result) < limit.min:
-            content = limit.alert_content + "Limit is " + str(limit.min) + ', and number of product is ' + str(len(result)) + '.'
+        if len(products):
+            context = {
+                'products': products,
+                'header': limit.alert_content,
+                'domain': limit.domain
+            }
+            content = render_to_string('email.html', context)
             to = [limit.admin_email, ]
-            send_mail("Product Alert", content, 'benjamin.langeriaf7@gmail.com', to)
+            send_mail(limit.alert_subject, '', 'tg.code.sp.zo.o@gmail.com', to, html_message=content)
 
 

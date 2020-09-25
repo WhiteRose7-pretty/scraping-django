@@ -125,7 +125,7 @@ CELERY_BROKER_URL = 'amqp://localhost'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'timurkju@gmail.com'
-EMAIL_HOST_PASSWORD = 'rihyangmi'
+EMAIL_HOST_USER = 'tg.code.sp.zo.o@gmail.com'
+EMAIL_HOST_PASSWORD = 'vjab48tzdz'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
