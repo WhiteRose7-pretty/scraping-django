@@ -8,7 +8,7 @@ class Product(models.Model):
     category = models.CharField(max_length=100, verbose_name='Kategoria')
     count = models.IntegerField(verbose_name='Stan magazynowy (stan_mag)') #if max save max scraping
     price = models.DecimalField(max_digits=20, decimal_places=2, verbose_name='Cena zakupu netto')
-    added_by_scrap = models.BooleanField(null=True, default=False)
+    added_by_scrap = models.BooleanField(null=True, default=False, verbose_name='Czy produkt dodany za pomocą automatycznego pobierania? (USTAWIC NA "NO" DLA PRODUKTÓW Z ADMINA)')
 
     class Meta:
         verbose_name = 'Produkty'
