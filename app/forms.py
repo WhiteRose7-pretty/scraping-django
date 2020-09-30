@@ -40,5 +40,4 @@ class BasicSearchForm(forms.Form):
                                                                'placeholder': 'Ilość do'}))
     all = forms.ChoiceField(label='',
                             choices=CHOICE_YES_NO,
-                            empty_label=None,
                             widget=forms.Select(attrs={'class': 'form-control'}))
