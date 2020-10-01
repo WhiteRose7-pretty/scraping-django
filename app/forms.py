@@ -2,6 +2,10 @@ from django import forms
 
 
 class BasicSearchForm(forms.Form):
+    CHOICE_YES_NO =[
+        ('Yes', 'Pokaż tylko moje produkty'),
+        ('All', 'Wszystkie produkty'),
+    ]
     index = forms.CharField(max_length=250,
                             required=False,
                             widget=forms.TextInput(attrs={'class': 'form-control',
@@ -34,3 +38,6 @@ class BasicSearchForm(forms.Form):
     count_end = forms.IntegerField(required=False,
                                widget=forms.NumberInput(attrs={'class': 'form-control',
                                                                'placeholder': 'Ilość do'}))
+    all = forms.ChoiceField(label='',
+                            choices=CHOICE_YES_NO,
+                            widget=forms.Select(attrs={'class': 'form-control'}))

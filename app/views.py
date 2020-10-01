@@ -8,7 +8,11 @@ from django.http import HttpResponseRedirect
 
 def home(request):
     #query
-    products = Product.objects.all()
+    all = request.GET.get('all')
+    if all == 'All':
+        products = Product.objects.all()
+    else:
+        products = Product.objects.filter(added_by_scrap=False)
     limit = Limit.objects.last()
 
     #form
