@@ -72,7 +72,7 @@ def delete(request):
 
 
 def scrap(request):
-    main()
+    main(type=True)
     return HttpResponseRedirect('/')
 
 

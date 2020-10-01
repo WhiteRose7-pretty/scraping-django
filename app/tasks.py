@@ -9,7 +9,6 @@ from django.template.loader import render_to_string
 import datetime
 import pytz
 
-
 xml_url = 'https://sollux.ideaerp.pl/sollux-xml'
 property_list_file = 'data.txt'
 
@@ -64,12 +63,13 @@ def get_product(page_url):
 
 
 @periodic_task(run_every=(crontab(minute='*/60')))
-def main():
+def main(type=False):
     tz = pytz.timezone('Europe/Warsaw')
     warsaw_now = datetime.datetime.now(tz)
     print(warsaw_now)
-    if not warsaw_now.hour == 6:
-        return True
+    if not type:
+        if not warsaw_now.hour == 6:
+            return True
 
     products = Product.objects.filter(added_by_scrap=True)
     for item in products:
@@ -111,5 +111,3 @@ def check_product():
             content = render_to_string('email.html', context)
             to = [limit.admin_email, ]
             send_mail(limit.alert_subject, '', 'tg.code.sp.zo.o@gmail.com', to, html_message=content)
-
-
