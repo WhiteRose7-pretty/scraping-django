@@ -8,6 +8,8 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 import datetime
 import pytz
+import decimal
+
 
 xml_url = 'https://sollux.ideaerp.pl/sollux-xml'
 property_list_file = 'data.txt'
@@ -64,11 +66,16 @@ def get_product(page_url):
 
 @periodic_task(run_every=(crontab(minute='*/60')))
 def main(type=False):
+    limit = Limit.objects.first()
+    update_hour = limit.update_hour
     tz = pytz.timezone('Europe/Warsaw')
     warsaw_now = datetime.datetime.now(tz)
     print(warsaw_now)
+    current_hour = decimal.Decimal(warsaw_now.hour)
+    print("current:", current_hour)
+    print("update hour", update_hour)
     if not type:
-        if not warsaw_now.hour == 6:
+        if not current_hour == update_hour:
             return True
 
     products = Product.objects.filter(added_by_scrap=True)
