@@ -76,13 +76,13 @@ def main(type=False):
         item.delete()
     data = get_product(xml_url)
 
-    with open(property_list_file, "wb+") as fp:
-        pickle.dump(data, fp)
+    # with open(property_list_file, "wb+") as fp:
+    #     pickle.dump(data, fp)
+    #
+    # with open(property_list_file, "rb+") as fp:
+    #     result = pickle.load(fp)
 
-    with open(property_list_file, "rb+") as fp:
-        result = pickle.load(fp)
-
-    for item in result:
+    for item in data:
         obj = Product()
         obj.index = item.index
         obj.name = item.name

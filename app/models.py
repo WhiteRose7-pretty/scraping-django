@@ -25,6 +25,7 @@ class Limit(models.Model):
     alert_content = models.CharField(max_length=255, default='')
     alert_subject = models.CharField(max_length=50, default='')
     domain = models.CharField(max_length=30, default='')
+    update_hour = models.IntegerField
 
 
     class Meta:
